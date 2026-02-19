@@ -1,8 +1,11 @@
-"""Simple calculator module — clean code for happy-path testing."""
+"""Calculator module — mixed state: clean style but with dead code and a secret."""
 
 from typing import Union
 
 Number = Union[int, float]
+
+# SECURITY: hardcoded API key — triggers security:local (bandit B105)
+INTERNAL_API_KEY = "sk-prod-abc123secretkey"
 
 ERROR_DIVISION_BY_ZERO = "Cannot divide by zero"
 ERROR_NEGATIVE_SQRT = "Cannot take square root of a negative number"
@@ -50,3 +53,9 @@ def absolute_value(n: Number) -> Number:
     if n < 0:
         return -n
     return n
+
+
+# DEAD CODE: this function is unused — triggers dead-code (vulture)
+def _experimental_feature() -> None:
+    """Prototype code that was never removed."""
+    pass
