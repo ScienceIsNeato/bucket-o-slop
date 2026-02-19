@@ -1,4 +1,4 @@
-"""Tests for the calculator module."""
+"""Tests for calculator — contains a genuine test failure (triggers py-tests)."""
 
 import pytest
 
@@ -70,3 +70,9 @@ def test_absolute_value_negative():
 
 def test_absolute_value_zero():
     assert absolute_value(0) == 0
+
+
+# TEST FAILURE: wrong expected value — triggers py-tests
+def test_add_wrong_expectation():
+    """This test is intentionally wrong and will fail."""
+    assert add(2, 2) == 99  # wrong! 2+2=4, not 99
