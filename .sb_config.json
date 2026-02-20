@@ -1,31 +1,38 @@
 {
     "version": "1.0",
     "default_profile": "commit",
-    "python": {
+    "overconfidence": {
         "gates": {
-            "py-lint": {
-                "enabled": true
-            },
-            "py-static-analysis": {
-                "enabled": true
-            },
             "py-tests": {
                 "enabled": true,
                 "test_dirs": [
                     "tests"
                 ]
             },
+            "py-static-analysis": {
+                "enabled": true
+            }
+        }
+    },
+    "deceptiveness": {
+        "gates": {
             "py-coverage": {
                 "enabled": true,
                 "threshold": 80
             },
             "py-diff-coverage": {
                 "enabled": false
+            },
+            "bogus-tests": {
+                "enabled": true
             }
         }
     },
-    "quality": {
+    "laziness": {
         "gates": {
+            "py-lint": {
+                "enabled": true
+            },
             "complexity": {
                 "enabled": true,
                 "max_rank": "C",
@@ -34,7 +41,11 @@
             "dead-code": {
                 "enabled": true,
                 "min_confidence": 60
-            },
+            }
+        }
+    },
+    "myopia": {
+        "gates": {
             "loc-lock": {
                 "enabled": true,
                 "max_file_lines": 1000,
@@ -49,14 +60,7 @@
                 "threshold": 2,
                 "min_words": 3
             },
-            "bogus-tests": {
-                "enabled": true
-            }
-        }
-    },
-    "security": {
-        "gates": {
-            "local": {
+            "security-audit": {
                 "enabled": true
             }
         }
