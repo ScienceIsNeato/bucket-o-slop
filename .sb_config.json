@@ -1,28 +1,68 @@
 {
     "version": "1.0",
     "default_profile": "commit",
-    "python": {
+    "overconfidence": {
         "gates": {
-            "py-lint": {"enabled": true},
-            "py-static-analysis": {"enabled": true},
-            "py-tests": {"enabled": true, "test_dirs": ["tests"]},
-            "py-coverage": {"enabled": true, "threshold": 80},
-            "py-diff-coverage": {"enabled": false}
+            "py-tests": {
+                "enabled": true,
+                "test_dirs": [
+                    "tests"
+                ]
+            },
+            "py-static-analysis": {
+                "enabled": true
+            }
         }
     },
-    "quality": {
+    "deceptiveness": {
         "gates": {
-            "complexity": {"enabled": true, "max_rank": "C", "max_complexity": 15},
-            "dead-code": {"enabled": true, "min_confidence": 80},
-            "loc-lock": {"enabled": true, "max_file_lines": 1000, "max_function_lines": 100},
-            "source-duplication": {"enabled": false},
-            "string-duplication": {"enabled": true, "threshold": 2, "min_words": 3},
-            "bogus-tests": {"enabled": true}
+            "py-coverage": {
+                "enabled": true,
+                "threshold": 80
+            },
+            "py-diff-coverage": {
+                "enabled": false
+            },
+            "bogus-tests": {
+                "enabled": true
+            }
         }
     },
-    "security": {
+    "laziness": {
         "gates": {
-            "local": {"enabled": true}
+            "py-lint": {
+                "enabled": true
+            },
+            "complexity": {
+                "enabled": true,
+                "max_rank": "C",
+                "max_complexity": 15
+            },
+            "dead-code": {
+                "enabled": true,
+                "min_confidence": 60
+            }
+        }
+    },
+    "myopia": {
+        "gates": {
+            "loc-lock": {
+                "enabled": true,
+                "max_file_lines": 1000,
+                "max_function_lines": 100
+            },
+            "source-duplication": {
+                "enabled": false,
+                "threshold": 5
+            },
+            "string-duplication": {
+                "enabled": true,
+                "threshold": 2,
+                "min_words": 3
+            },
+            "security-audit": {
+                "enabled": true
+            }
         }
     }
 }
