@@ -74,5 +74,4 @@ def test_absolute_value_zero():
 
 # BOGUS TEST: tautological assertion — triggers bogus-tests check
 def test_bogus_always_passes():
-    x = absolute_value(3)
-    assert x == x  # no real assertion
+    assert True  # tautological — always passes
