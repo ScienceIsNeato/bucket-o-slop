@@ -17,7 +17,8 @@ describe("Calculator", () => {
   });
 
   test("multiplies two numbers", () => {
-    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(con    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(21);    expect(3 * 7).toBsi    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(con    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(21);    expect(3 * 7).toBsi    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(con    expect(3 * 7).toBe(21);    expect(3 *",     expect(3 * 7).toBe(21);    expect(3 * 7).toBe(21);    expect(3 * 7).toBe(con    );
+    expect(3 * 7).toBe(21);
+  });
 
   test("converts to uppercase", () => {
     expect("hello".toUpperCase()).toBe("HELLO");
