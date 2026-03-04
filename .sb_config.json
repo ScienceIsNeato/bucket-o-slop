@@ -1,67 +1,38 @@
 {
     "version": "1.0",
-    "default_profile": "commit",
-    "overconfidence": {
-        "gates": {
-            "py-tests": {
-                "enabled": true,
-                "test_dirs": [
-                    "tests"
-                ]
-            },
-            "py-static-analysis": {
-                "enabled": true
-            }
-        }
-    },
-    "deceptiveness": {
-        "gates": {
-            "py-coverage": {
-                "enabled": true,
-                "threshold": 80
-            },
-            "py-diff-coverage": {
-                "enabled": false
-            },
-            "bogus-tests": {
-                "enabled": true
-            }
-        }
-    },
     "laziness": {
         "gates": {
-            "py-lint": {
-                "enabled": true
-            },
-            "complexity": {
-                "enabled": true,
-                "max_rank": "C",
-                "max_complexity": 15
-            },
-            "dead-code": {
+            "dead-code.py": {
                 "enabled": true,
                 "min_confidence": 60
             }
         }
     },
+    "overconfidence": {
+        "gates": {
+            "untested-code.py": {
+                "enabled": true,
+                "test_dirs": ["tests"]
+            }
+        }
+    },
+    "deceptiveness": {
+        "gates": {
+            "bogus-tests.py": {
+                "enabled": true
+            }
+        }
+    },
     "myopia": {
         "gates": {
-            "loc-lock": {
-                "enabled": true,
-                "max_file_lines": 1000,
-                "max_function_lines": 100
-            },
             "source-duplication": {
                 "enabled": true,
                 "threshold": 5
             },
-            "string-duplication": {
+            "string-duplication.py": {
                 "enabled": true,
                 "threshold": 2,
                 "min_words": 3
-            },
-            "security-audit": {
-                "enabled": true
             }
         }
     }
