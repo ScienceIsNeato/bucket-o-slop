@@ -1,0 +1,84 @@
+# SARIF demo — installs slop-mop from PR #74 and uploads findings to
+# Code Scanning.  This workflow exists to prove the SARIF round-trip
+# works end-to-end against GitHub's actual ingester (which is stricter
+# than the OASIS schema).  See slop-mop PR #74 for context.
+#
+# Delete this workflow once the demonstration is complete — bucket-o-slop
+# is a fixture repo, not a production target.
+
+name: slop-mop SARIF demo
+
+on:
+  pull_request:
+  push:
+    branches: ['demo-sarif-*']
+
+jobs:
+  scan:
+    name: slop-mop → Code Scanning
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write   # upload-sarif needs this
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install slop-mop from PR branch
+        run: |
+          git clone --depth 1 --branch feat/sarif-output-MODEL_A \
+            https://github.com/ScienceIsNeato/slop-mop.git /tmp/slopmop
+          pip install "/tmp/slopmop[all]"
+
+      - name: Init slop-mop config
+        run: sm init --non-interactive
+
+      - name: Run slop-mop (SARIF)
+        # continue-on-error: the SARIF file is most interesting when swab
+        # FAILS — that's when there are findings to display.  The re-fail
+        # step below preserves the red X.
+        id: swab
+        continue-on-error: true
+        run: sm swab --sarif --output-file slopmop.sarif --no-fail-fast
+
+      - name: Show SARIF summary
+        if: always() && hashFiles('slopmop.sarif') != ''
+        run: |
+          python3 << 'EOF'
+          import json
+          d = json.load(open('slopmop.sarif'))
+          results = d['runs'][0]['results']
+          rules = d['runs'][0]['tool']['driver']['rules']
+          print(f"rules: {len(rules)}  results: {len(results)}")
+          for r in results[:20]:
+              loc = r['locations'][0]['physicalLocation']
+              uri = loc['artifactLocation']['uri']
+              line = loc.get('region', {}).get('startLine', '')
+              where = f"{uri}:{line}" if line else uri
+              print(f"  [{r['level']}] {r['ruleId']} @ {where}")
+              print(f"    {r['message']['text'][:100]}")
+          if len(results) > 20:
+              print(f"  ... and {len(results) - 20} more")
+          EOF
+
+      - name: Upload SARIF to GitHub Code Scanning
+        if: always() && hashFiles('slopmop.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: slopmop.sarif
+          category: slop-mop
+
+      - name: Fail if slop-mop found issues
+        if: steps.swab.outcome == 'failure'
+        run: exit 1
