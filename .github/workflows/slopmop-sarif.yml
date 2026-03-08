@@ -1,0 +1,83 @@
+name: slop-mop code scanning
+
+on:
+  push:
+    branches: [main, all-pass]
+  pull_request:
+    branches: [main, all-pass]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  scan:
+    name: Primary Code Scanning Gate (blocking)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install slopmop
+
+      - name: Run slop-mop scour to SARIF
+        id: scour
+        continue-on-error: true
+        run: |
+          source .venv/bin/activate
+          sm scour --sarif --output-file slopmop.sarif --no-json
+
+      - name: Publish SARIF to Code Scanning
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: slopmop.sarif
+          category: slopmop
+
+      - name: Enforce Primary Gate Verdict
+        if: steps.scour.outcome == 'failure'
+        run: |
+          if [ -f slopmop.sarif ]; then
+            python - <<'PY'
+            import json
+            from collections import Counter
+
+            with open("slopmop.sarif", "r", encoding="utf-8") as f:
+                sarif = json.load(f)
+
+            runs = sarif.get("runs") or []
+            results = runs[0].get("results") if runs else []
+            if results:
+                counts = Counter(r.get("ruleId", "unknown") for r in results)
+                top = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:10]
+                summary = ", ".join(f"{rule} ({count})" for rule, count in top)
+                print("::error::slopmop scour failed")
+                print(f"::error::Top failing rules: {summary}")
+                print("::notice::Open Security -> Code scanning for full findings.")
+            else:
+                print("::error::slopmop scour failed, but SARIF has zero results")
+            PY
+          else
+            echo "::error::slopmop scour failed — slopmop.sarif missing"
+          fi
+          exit 1
