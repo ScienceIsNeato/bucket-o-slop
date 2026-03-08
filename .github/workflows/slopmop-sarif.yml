@@ -39,7 +39,7 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
-          pip install slopmop
+          pip install "slopmop[all]"
 
       - name: Run slop-mop scour to SARIF
         id: scour
