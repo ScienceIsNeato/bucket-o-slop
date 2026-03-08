@@ -5,6 +5,8 @@ on:
     branches: [main, all-pass]
   pull_request:
     branches: [main, all-pass]
+  pull_request_target:
+    branches: [main, all-pass]
   workflow_dispatch:
 
 permissions:
