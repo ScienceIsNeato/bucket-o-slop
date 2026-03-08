@@ -3,8 +3,6 @@ name: slop-mop code scanning
 on:
   push:
     branches: [main, all-pass]
-  pull_request:
-    branches: [main, all-pass]
   pull_request_target:
     branches: [main, all-pass]
   workflow_dispatch:
@@ -23,6 +21,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          # pull_request_target checks out base branch by default;
+          # override to scan the actual PR code.
+          # Falls back to github.sha for push/workflow_dispatch.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Set up Python
