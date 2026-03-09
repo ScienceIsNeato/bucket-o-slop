@@ -13,11 +13,11 @@
 have something real to run against. It contains three git branches, each representing a
 different quality state:
 
-| Branch | Purpose | Expected slop-mop outcome |
-|--------|---------|--------------------------|
-| `main` | Clean, well-written code | All gates **pass** → exit 0 |
+| Branch     | Purpose                                 | Expected slop-mop outcome          |
+| ---------- | --------------------------------------- | ---------------------------------- |
+| `main`     | Clean, well-written code                | All gates **pass** → exit 0        |
 | `all-fail` | Every supported gate is uniquely broken | All gates **fail** → exit non-zero |
-| `mixed` | Some gates fail, one gate disabled | Mixed results → exit non-zero |
+| `mixed`    | Some gates fail, one gate disabled      | Mixed results → exit non-zero      |
 
 The integration tests in slop-mop ([`tests/integration/`](https://github.com/ScienceIsNeato/slop-mop/tree/main/tests/integration))
 check out each branch inside a Docker container, run `sm validate commit`, and assert on
@@ -30,6 +30,7 @@ the exit code and output.
 ### `main` — happy path
 
 All gates enabled and passing:
+
 - `src/calculator.py` and `src/utils.py` — clean, typed, no dead code, no secrets
 - `tests/` — full coverage, no bogus tests
 - `.sb_config.json` — all gates enabled with standard thresholds
@@ -38,23 +39,24 @@ All gates enabled and passing:
 
 Each file deliberately trips a different gate:
 
-| File | Gate triggered | How |
-|------|---------------|-----|
-| `src/calculator.py` | `py-lint` | unused import (`import os`) |
-| `src/calculator.py` | `security:local` | hardcoded credential (`DB_PASSWORD`) |
-| `src/calculator.py` | `dead-code` | unused function `_internal_helper_nobody_calls()` |
-| `src/calculator.py` | `py-lint` | format drift (missing spaces around `:`) |
-| `src/utils.py` | `string-duplication` | same error message string defined 3× |
-| `src/utils.py` | `complexity` | `classify_input()` has 16+ branches |
-| `src/utils.py` + `src/duplicate_block.py` | `source-duplication` | verbatim copied function body |
-| `src/utils.py` | `loc-lock` | `bloated_function()` is ~120 lines |
-| `tests/test_calculator.py` | `py-tests` | `test_add_wrong_expectation()` asserts `add(2,2) == 99` |
-| `tests/test_utils.py` | `bogus-tests` | tautological asserts (`assert True`, `assert x == x`) |
-| `tests/test_utils.py` | `py-coverage` | coverage drops below 80% threshold |
+| File                                      | Gate triggered       | How                                                     |
+| ----------------------------------------- | -------------------- | ------------------------------------------------------- |
+| `src/calculator.py`                       | `py-lint`            | unused import (`import os`)                             |
+| `src/calculator.py`                       | `security:local`     | hardcoded credential (`DB_PASSWORD`)                    |
+| `src/calculator.py`                       | `dead-code`          | unused function `_internal_helper_nobody_calls()`       |
+| `src/calculator.py`                       | `py-lint`            | format drift (missing spaces around `:`)                |
+| `src/utils.py`                            | `string-duplication` | same error message string defined 3×                    |
+| `src/utils.py`                            | `complexity`         | `classify_input()` has 16+ branches                     |
+| `src/utils.py` + `src/duplicate_block.py` | `source-duplication` | verbatim copied function body                           |
+| `src/utils.py`                            | `loc-lock`           | `bloated_function()` is ~120 lines                      |
+| `tests/test_calculator.py`                | `py-tests`           | `test_add_wrong_expectation()` asserts `add(2,2) == 99` |
+| `tests/test_utils.py`                     | `bogus-tests`        | tautological asserts (`assert True`, `assert x == x`)   |
+| `tests/test_utils.py`                     | `py-coverage`        | coverage drops below 80% threshold                      |
 
 ### `mixed` — partial failures + disabled gate
 
 Realistic mid-development state:
+
 - **Fails:** `security:local` (hardcoded API key), `dead-code` (`_experimental_feature`), `bogus-tests` (tautology in test)
 - **Passes:** `py-lint`, `py-tests`, `py-coverage`, `complexity`, `loc-lock`, `string-duplication`
 - **Skipped:** `source-duplication` — disabled in `.sb_config.json` to exercise the skip path
@@ -115,4 +117,3 @@ BUCKET_O_SLOP_PATH="$(cd ../bucket-o-slop && pwd)" \
 
 This repo is maintained as a test fixture. Its `all-fail` branch contains intentional
 security issues, dead code, and broken tests. **Do not copy code from this repo.**
-
