@@ -46,18 +46,31 @@ jobs:
           pip install --upgrade pip
           pip install "slopmop[all]"
 
+      - name: Install Node-based gate tools
+        run: |
+          npm install -g jscpd find-duplicate-strings
+
       - name: Run slop-mop scour to SARIF
         id: scour
         continue-on-error: true
         run: |
           source .venv/bin/activate
-          sm scour --sarif --output-file slopmop.sarif --no-json
+          sm scour \
+            --sarif --output-file slopmop.sarif \
+            --json-file slopmop-results.json \
+            --no-json
 
       - name: Publish SARIF to Code Scanning
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: slopmop.sarif
           category: slopmop
+
+      - name: Upload JSON scan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: slopmop-results
+          path: slopmop-results.json
 
       - name: Summarise SARIF failures
         if: steps.scour.outcome == 'failure'
