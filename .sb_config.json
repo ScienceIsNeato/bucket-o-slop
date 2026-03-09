@@ -1,39 +1,63 @@
 {
-    "version": "1.0",
-    "laziness": {
-        "gates": {
-            "dead-code.py": {
-                "enabled": true,
-                "min_confidence": 60
-            }
-        }
-    },
-    "overconfidence": {
-        "gates": {
-            "untested-code.py": {
-                "enabled": true,
-                "test_dirs": ["tests"]
-            }
-        }
-    },
-    "deceptiveness": {
-        "gates": {
-            "bogus-tests.py": {
-                "enabled": true
-            }
-        }
-    },
-    "myopia": {
-        "gates": {
-            "source-duplication": {
-                "enabled": true,
-                "threshold": 5
-            },
-            "string-duplication.py": {
-                "enabled": true,
-                "threshold": 2,
-                "min_words": 3
-            }
-        }
+  "version": "1.0",
+  "laziness": {
+    "gates": {
+      "complexity-creep.py": {
+        "enabled": true,
+        "max_rank": "A",
+        "max_complexity": 3
+      },
+      "dead-code.py": {
+        "enabled": true,
+        "min_confidence": 60
+      },
+      "loc-lock": {
+        "enabled": true,
+        "max_file_lines": 200,
+        "max_function_lines": 50
+      },
+      "sloppy-formatting.js": {
+        "enabled": true
+      }
     }
+  },
+  "overconfidence": {
+    "gates": {
+      "missing-annotations.py": {
+        "enabled": true
+      },
+      "untested-code.py": {
+        "enabled": true,
+        "test_dirs": ["tests"]
+      }
+    }
+  },
+  "deceptiveness": {
+    "gates": {
+      "bogus-tests.py": {
+        "enabled": true
+      },
+      "hand-wavy-tests.js": {
+        "enabled": true
+      }
+    }
+  },
+  "myopia": {
+    "gates": {
+      "source-duplication": {
+        "enabled": true,
+        "threshold": 0.1,
+        "min_tokens": 20,
+        "min_lines": 3
+      },
+      "string-duplication.py": {
+        "enabled": true,
+        "threshold": 2,
+        "min_words": 2
+      },
+      "vulnerability-blindness.py": {
+        "enabled": true
+      }
+    }
+  }
 }

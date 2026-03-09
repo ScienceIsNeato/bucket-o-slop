@@ -54,5 +54,5 @@ def _internal_helper_nobody_calls() -> str:
 
 
 # FORMAT DRIFT: missing spaces around operators — triggers black (py-lint)
-def poorly_formatted(x:int,y:int)->int:
-    return x+y
+def poorly_formatted(x: int, y: int) -> int:
+    return x + y
