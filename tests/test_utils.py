@@ -6,6 +6,7 @@ Coverage is also deliberately sparse to keep py-coverage below threshold.
 import pytest
 
 from src.utils import (
+    ERROR_EMPTY_STRING,
     ERROR_INVALID_WIDTH,
     reverse_string,
     truncate,
@@ -13,17 +14,13 @@ from src.utils import (
 )
 
 
-# BOGUS TEST: assert True — triggers bogus-tests check
-def test_nothing_useful():
-    """This test asserts nothing meaningful."""
-    assert True
+def test_reverse_string_empty():
+    with pytest.raises(ValueError, match=ERROR_EMPTY_STRING):
+        reverse_string("")
 
 
-# BOGUS TEST: tautological assertion — triggers bogus-tests check
-def test_also_useless():
-    """Another bogus test with a tautology."""
-    x = 1
-    assert x == x  # noqa
+def test_word_count_single_word():
+    assert word_count("hello") == 1
 
 
 def test_reverse_string():
