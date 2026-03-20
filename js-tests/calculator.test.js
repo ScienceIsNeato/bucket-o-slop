@@ -11,31 +11,26 @@
 describe("Calculator", () => {
   test("adds two positive numbers", () => {
     const result = 2 + 3;
-    console.log("result:", result);
-    // No assertion — this always passes
+    expect(result).toBe(5);
   });
 
   test("subtracts two numbers", () => {
     const result = 10 - 4;
-    // Computed but never checked
+    expect(result).toBe(6);
   });
 
   test("multiplies two numbers", () => {
     const product = 3 * 7;
-    // Classic vibe-coded test: looks busy, proves nothing
-    if (product > 0) {
-      console.log("positive result");
-    }
+    expect(product).toBe(21);
   });
 
   test("divides two numbers", () => {
     const result = 20 / 5;
-    // This test passes even if division is broken
+    expect(result).toBe(4);
   });
 
   test("handles division by zero", () => {
     const result = 1 / 0;
-    // Should assert Infinity — but doesn't
-    console.log("divided:", result);
+    expect(result).toBe(Infinity);
   });
 });
