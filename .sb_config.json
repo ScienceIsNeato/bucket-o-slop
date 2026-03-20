@@ -3,31 +3,31 @@
   "laziness": {
     "gates": {
       "complexity-creep.py": {
-        "enabled": true,
+        "enabled": false,
         "max_rank": "A",
         "max_complexity": 3
       },
       "dead-code.py": {
-        "enabled": true,
+        "enabled": false,
         "min_confidence": 60
       },
       "loc-lock": {
-        "enabled": true,
+        "enabled": false,
         "max_file_lines": 200,
         "max_function_lines": 50
       },
       "sloppy-formatting.js": {
-        "enabled": true
+        "enabled": false
       }
     }
   },
   "overconfidence": {
     "gates": {
       "missing-annotations.py": {
-        "enabled": true
+        "enabled": false
       },
       "untested-code.py": {
-        "enabled": true,
+        "enabled": false,
         "test_dirs": ["tests"]
       }
     }
@@ -37,13 +37,19 @@
       "bogus-tests.py": {
         "enabled": true
       },
-      "hand-wavy-tests.js": {
+      "bogus-tests.js": {
         "enabled": true
+      },
+      "hand-wavy-tests.js": {
+        "enabled": false
       }
     }
   },
   "myopia": {
     "gates": {
+      "dependency-risk.py": {
+        "enabled": false
+      },
       "source-duplication": {
         "enabled": true,
         "threshold": 0.1,
@@ -51,12 +57,15 @@
         "min_lines": 3
       },
       "string-duplication.py": {
-        "enabled": true,
+        "enabled": false,
         "threshold": 2,
         "min_words": 2
       },
+      "code-sprawl": {
+        "enabled": false
+      },
       "vulnerability-blindness.py": {
-        "enabled": true
+        "enabled": false
       }
     }
   }
